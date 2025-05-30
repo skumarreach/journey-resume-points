@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronRight, Instagram, Facebook, Youtube, Twitter, MessageCircle, Zap, Send } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import AuthButton from './AuthButton';
 import ParticipateWidget from './ParticipateWidget';
@@ -11,6 +11,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 
 const Header = () => {
@@ -18,13 +21,23 @@ const Header = () => {
   const { t } = useTranslation();
   
   const navItems = [
-    { path: '/social', label: t('nav.social') },
+    { path: '/social', label: t('nav.social'), hasSubmenu: true },
     { path: '/', label: t('nav.home') },
     { path: '/about', label: t('nav.about') },
     { path: '/causes', label: t('nav.causes') },
     { path: '/gallery', label: t('nav.gallery') },
     { path: '/transparency', label: t('nav.transparency') },
     { path: '/contact', label: t('nav.contact') }
+  ];
+
+  const socialLinks = [
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/gurukulam.chennai?igsh=NHoxbzBmaDZoeTRo' },
+    { name: 'Facebook', icon: Facebook, url: 'https://www.facebook.com/share/16Hxrysob7/' },
+    { name: 'YouTube', icon: Youtube, url: 'https://youtube.com/@gurukulamindia4411?si=7GDWPpZYvpb3EvDP' },
+    { name: 'X (Twitter)', icon: Twitter, url: 'https://x.com/gurukulam2019?s=21' },
+    { name: 'WhatsApp', icon: MessageCircle, url: 'https://chat.whatsapp.com/JcVPfNWkj7y5jOJAKWGGIH' },
+    { name: 'Snapchat', icon: Zap, url: 'https://snapchat.com/t/TvKt4eeG' },
+    { name: 'Telegram', icon: Send, url: 'https://t.me/gurukulamchennai' }
   ];
 
   return (
@@ -49,12 +62,41 @@ const Header = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent 
               align="start" 
-              className="w-64 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200/30 shadow-2xl rounded-2xl backdrop-blur-sm z-50 overflow-hidden"
+              className="w-64 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-2xl backdrop-blur-sm z-50 overflow-hidden"
               sideOffset={8}
             >
               <div className="p-2">
                 {navItems.map((item, index) => {
                   const isActive = location.pathname === item.path;
+                  
+                  if (item.hasSubmenu) {
+                    return (
+                      <DropdownMenuSub key={item.path}>
+                        <DropdownMenuSubTrigger className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center justify-between text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer">
+                          <span>{item.label}</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm">
+                          <div className="p-2">
+                            {socialLinks.map((social) => (
+                              <DropdownMenuItem key={social.name} asChild className="p-0 mb-1 last:mb-0">
+                                <a 
+                                  href={social.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400"
+                                >
+                                  <social.icon className="h-4 w-4" />
+                                  <span>{social.name}</span>
+                                </a>
+                              </DropdownMenuItem>
+                            ))}
+                          </div>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    );
+                  }
+                  
                   return (
                     <DropdownMenuItem key={item.path} asChild className="p-0 mb-1 last:mb-0">
                       <Link 
@@ -65,8 +107,8 @@ const Header = () => {
                           border border-transparent
                           flex items-center justify-between
                           ${isActive 
-                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-[1.02] border-blue-300' 
-                            : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-100 hover:to-indigo-100 hover:text-blue-800 hover:shadow-md hover:scale-[1.01] hover:border-blue-200'
+                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg transform scale-[1.02] border-emerald-400' 
+                            : 'text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400'
                           }
                         `}
                       >
