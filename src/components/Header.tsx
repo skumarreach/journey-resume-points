@@ -14,6 +14,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 
 const Header = () => {
@@ -63,7 +64,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="start" 
-                className="w-64 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-2xl backdrop-blur-sm z-[99999] overflow-hidden"
+                className="w-64 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-2xl backdrop-blur-sm overflow-hidden"
                 sideOffset={8}
               >
                 <div className="p-2">
@@ -77,26 +78,28 @@ const Header = () => {
                             <span>{item.label}</span>
                             <ChevronRight className="h-4 w-4" />
                           </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent 
-                            className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm z-[99999]"
-                            sideOffset={8}
-                          >
-                            <div className="p-2">
-                              {socialLinks.map((social) => (
-                                <DropdownMenuItem key={social.name} asChild className="p-0 mb-1 last:mb-0">
-                                  <a 
-                                    href={social.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400"
-                                  >
-                                    <social.icon className="h-4 w-4" />
-                                    <span>{social.name}</span>
-                                  </a>
-                                </DropdownMenuItem>
-                              ))}
-                            </div>
-                          </DropdownMenuSubContent>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent 
+                              className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm"
+                              sideOffset={8}
+                            >
+                              <div className="p-2">
+                                {socialLinks.map((social) => (
+                                  <DropdownMenuItem key={social.name} asChild className="p-0 mb-1 last:mb-0">
+                                    <a 
+                                      href={social.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400"
+                                    >
+                                      <social.icon className="h-4 w-4" />
+                                      <span>{social.name}</span>
+                                    </a>
+                                  </DropdownMenuItem>
+                                ))}
+                              </div>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
                         </DropdownMenuSub>
                       );
                     }
