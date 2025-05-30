@@ -63,7 +63,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="start" 
-                className="w-64 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-2xl backdrop-blur-sm z-[9999] overflow-hidden"
+                className="w-64 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-2xl backdrop-blur-sm z-[99999] overflow-hidden"
                 sideOffset={8}
               >
                 <div className="p-2">
@@ -78,7 +78,7 @@ const Header = () => {
                             <ChevronRight className="h-4 w-4" />
                           </DropdownMenuSubTrigger>
                           <DropdownMenuSubContent 
-                            className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm z-[9999]"
+                            className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm z-[99999]"
                             sideOffset={8}
                           >
                             <div className="p-2">
