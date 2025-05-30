@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean | null
+          role: Database["public"]["Enums"]["admin_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_history: {
         Row: {
           created_at: string
@@ -36,6 +66,169 @@ export type Database = {
         }
         Relationships: []
       }
+      post_analytics: {
+        Row: {
+          clicks: number | null
+          comments: number | null
+          engagement: number | null
+          id: string
+          impressions: number | null
+          likes: number | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_id: string
+          reach: number | null
+          recorded_at: string
+          shares: number | null
+        }
+        Insert: {
+          clicks?: number | null
+          comments?: number | null
+          engagement?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_id: string
+          reach?: number | null
+          recorded_at?: string
+          shares?: number | null
+        }
+        Update: {
+          clicks?: number | null
+          comments?: number | null
+          engagement?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          post_id?: string
+          reach?: number | null
+          recorded_at?: string
+          shares?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_analytics_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          external_post_id: string | null
+          id: string
+          media_urls: string[] | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          published_at: string | null
+          scheduled_at: string | null
+          social_account_id: string | null
+          status: Database["public"]["Enums"]["post_status"] | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          external_post_id?: string | null
+          id?: string
+          media_urls?: string[] | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          published_at?: string | null
+          scheduled_at?: string | null
+          social_account_id?: string | null
+          status?: Database["public"]["Enums"]["post_status"] | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          external_post_id?: string | null
+          id?: string
+          media_urls?: string[] | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          published_at?: string | null
+          scheduled_at?: string | null
+          social_account_id?: string | null
+          status?: Database["public"]["Enums"]["post_status"] | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_social_account_id_fkey"
+            columns: ["social_account_id"]
+            isOneToOne: false
+            referencedRelation: "social_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_accounts: {
+        Row: {
+          access_token_encrypted: string | null
+          account_id: string
+          account_name: string
+          added_by: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          refresh_token_encrypted: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_encrypted?: string | null
+          account_id: string
+          account_name: string
+          added_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          refresh_token_encrypted?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_encrypted?: string | null
+          account_id?: string
+          account_name?: string
+          added_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          refresh_token_encrypted?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_accounts_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -44,7 +237,19 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      admin_role:
+        | "super_admin"
+        | "content_admin"
+        | "analytics_admin"
+        | "social_admin"
+      post_status: "draft" | "scheduled" | "published" | "failed"
+      social_platform:
+        | "facebook"
+        | "instagram"
+        | "twitter"
+        | "linkedin"
+        | "youtube"
+        | "tiktok"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -159,6 +364,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      admin_role: [
+        "super_admin",
+        "content_admin",
+        "analytics_admin",
+        "social_admin",
+      ],
+      post_status: ["draft", "scheduled", "published", "failed"],
+      social_platform: [
+        "facebook",
+        "instagram",
+        "twitter",
+        "linkedin",
+        "youtube",
+        "tiktok",
+      ],
+    },
   },
 } as const
