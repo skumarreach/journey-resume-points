@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronRight, Instagram, Facebook, Youtube, Twitter, MessageCircle, Zap, Send } from 'lucide-react';
+import { ChevronDown, ChevronLeft, Instagram, Facebook, Youtube, Twitter, MessageCircle, Zap, Send } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import AuthButton from './AuthButton';
 import ParticipateWidget from './ParticipateWidget';
@@ -11,15 +11,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 
 const Header = () => {
   const location = useLocation();
   const { t } = useTranslation();
+  const [showSocialSubmenu, setShowSocialSubmenu] = useState(false);
   
   const navItems = [
     { path: '/social', label: t('nav.social'), hasSubmenu: true },
@@ -68,65 +65,80 @@ const Header = () => {
                 sideOffset={8}
               >
                 <div className="p-2">
-                  {navItems.map((item, index) => {
-                    const isActive = location.pathname === item.path;
-                    
-                    if (item.hasSubmenu) {
-                      return (
-                        <DropdownMenuSub key={item.path}>
-                          <DropdownMenuSubTrigger className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center justify-between text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer">
-                            <span>{item.label}</span>
-                            <ChevronRight className="h-4 w-4" />
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuPortal>
-                            <DropdownMenuSubContent 
-                              className="w-56 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 border-2 border-blue-600/50 shadow-2xl rounded-xl backdrop-blur-sm"
-                              sideOffset={8}
+                  {!showSocialSubmenu ? (
+                    // Main Menu
+                    <>
+                      {navItems.map((item, index) => {
+                        const isActive = location.pathname === item.path;
+                        
+                        if (item.hasSubmenu) {
+                          return (
+                            <DropdownMenuItem 
+                              key={item.path} 
+                              asChild 
+                              className="p-0 mb-1 last:mb-0"
+                              onMouseEnter={() => setShowSocialSubmenu(true)}
                             >
-                              <div className="p-2">
-                                {socialLinks.map((social) => (
-                                  <DropdownMenuItem key={social.name} asChild className="p-0 mb-1 last:mb-0">
-                                    <a 
-                                      href={social.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400"
-                                    >
-                                      <social.icon className="h-4 w-4" />
-                                      <span>{social.name}</span>
-                                    </a>
-                                  </DropdownMenuItem>
-                                ))}
+                              <div className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center justify-between text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer">
+                                <span>{item.label}</span>
+                                <ChevronLeft className="h-4 w-4 rotate-180" />
                               </div>
-                            </DropdownMenuSubContent>
-                          </DropdownMenuPortal>
-                        </DropdownMenuSub>
-                      );
-                    }
-                    
-                    return (
-                      <DropdownMenuItem key={item.path} asChild className="p-0 mb-1 last:mb-0">
-                        <Link 
-                          to={item.path}
-                          className={`
-                            w-full text-left px-4 py-3 text-sm font-medium rounded-xl
-                            transition-all duration-300 ease-in-out
-                            border border-transparent
-                            flex items-center justify-between
-                            ${isActive 
-                              ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg transform scale-[1.02] border-emerald-400' 
-                              : 'text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400'
-                            }
-                          `}
-                        >
-                          <span>{item.label}</span>
-                          {isActive && (
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                          )}
-                        </Link>
+                            </DropdownMenuItem>
+                          );
+                        }
+                        
+                        return (
+                          <DropdownMenuItem key={item.path} asChild className="p-0 mb-1 last:mb-0">
+                            <Link 
+                              to={item.path}
+                              className={`
+                                w-full text-left px-4 py-3 text-sm font-medium rounded-xl
+                                transition-all duration-300 ease-in-out
+                                border border-transparent
+                                flex items-center justify-between
+                                ${isActive 
+                                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg transform scale-[1.02] border-emerald-400' 
+                                  : 'text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400'
+                                }
+                              `}
+                            >
+                              <span>{item.label}</span>
+                              {isActive && (
+                                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                              )}
+                            </Link>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    // Social Submenu
+                    <>
+                      <DropdownMenuItem 
+                        asChild 
+                        className="p-0 mb-2"
+                        onMouseEnter={() => setShowSocialSubmenu(false)}
+                      >
+                        <div className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer">
+                          <ChevronLeft className="h-4 w-4" />
+                          <span>Back to Main Menu</span>
+                        </div>
                       </DropdownMenuItem>
-                    );
-                  })}
+                      {socialLinks.map((social) => (
+                        <DropdownMenuItem key={social.name} asChild className="p-0 mb-1 last:mb-0">
+                          <a 
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400"
+                          >
+                            <social.icon className="h-4 w-4" />
+                            <span>{social.name}</span>
+                          </a>
+                        </DropdownMenuItem>
+                      ))}
+                    </>
+                  )}
                 </div>
                 <div className="h-1 bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400"></div>
               </DropdownMenuContent>
