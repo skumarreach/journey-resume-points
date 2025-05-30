@@ -112,12 +112,12 @@ const Header = () => {
                       })}
                     </>
                   ) : (
-                    // Social Submenu
+                    // Social Submenu - Only show this when showSocialSubmenu is true
                     <>
                       <DropdownMenuItem 
                         asChild 
                         className="p-0 mb-2"
-                        onMouseEnter={() => setShowSocialSubmenu(false)}
+                        onClick={() => setShowSocialSubmenu(false)}
                       >
                         <div className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer">
                           <ChevronLeft className="h-4 w-4" />
