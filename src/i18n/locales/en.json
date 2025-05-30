@@ -1,0 +1,79 @@
+
+{
+  "nav": {
+    "home": "Home",
+    "social": "Social",
+    "about": "About",
+    "causes": "Causes", 
+    "gallery": "Gallery",
+    "transparency": "Transparency",
+    "contact": "Contact"
+  },
+  "common": {
+    "skipToContent": "Skip to main content"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up", 
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "loading": "Loading...",
+    "createAccount": "Create a new account to get started.",
+    "enterCredentials": "Enter your credentials to sign in.",
+    "needAccount": "Don't have an account? Sign up",
+    "alreadyHaveAccount": "Already have an account? Sign in",
+    "signInSuccess": "Successfully signed in!",
+    "signUpSuccess": "Account created successfully!",
+    "signOutSuccess": "Successfully signed out!",
+    "checkEmail": "Please check your email to verify your account.",
+    "error": "Authentication Error",
+    "orContinueWith": "Or continue with",
+    "orUseEmail": "Or use email",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithMicrosoft": "Continue with Microsoft",
+    "continueWithApple": "Continue with Apple"
+  },
+  "hero": {
+    "title": "Empowering Autistic Future Through Your Support",
+    "subtitle": "Join us in our mission to provide quality education and opportunities to underserved communities. Together, we can create lasting change and build a brighter future for all.",
+    "primaryCta": "Get Involved",
+    "secondaryCta": "Learn More"
+  },
+  "about": {
+    "hero": {
+      "title": "About Our Mission",
+      "subtitle": "Dedicated to creating educational opportunities and fostering community development in rural areas. Learn about our story, values, and the impact we're making together."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Get in Touch",
+      "subtitle": "Have questions or want to get involved? We'd love to hear from you. Reach out to learn more about our programs and how you can make a difference."
+    }
+  },
+  "causes": {
+    "hero": {
+      "title": "Our Causes",
+      "subtitle": "Discover the various initiatives and programs we support to create lasting change in rural communities. From education to healthcare, every cause matters."
+    }
+  },
+  "gallery": {
+    "hero": {
+      "title": "Gallery",
+      "subtitle": "See the impact of our work through photos and stories from the communities we serve. Witness the transformation and progress we're making together."
+    }
+  },
+  "social": {
+    "hero": {
+      "title": "Social Impact",
+      "subtitle": "Connect with our community and see how we're making a difference. Follow our journey and join the conversation about creating positive change."
+    }
+  },
+  "footer": {
+    "organization": "Gurukulam - Empowering Communities Through Education",
+    "taxExemption": "501(c)(3) Tax-Exempt Organization",
+    "copyright": "© {{year}} Gurukulam. All rights reserved.",
+    "privacyPolicy": "Privacy Policy"
+  }
+}
