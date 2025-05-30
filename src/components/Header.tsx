@@ -66,7 +66,7 @@ const Header = () => {
               >
                 <div className="p-2">
                   {!showSocialSubmenu ? (
-                    // Main Menu
+                    // Main Menu - Show when showSocialSubmenu is false
                     <>
                       {navItems.map((item, index) => {
                         const isActive = location.pathname === item.path;
@@ -112,7 +112,7 @@ const Header = () => {
                       })}
                     </>
                   ) : (
-                    // Social Submenu - Only show this when showSocialSubmenu is true
+                    // Social Submenu - Show when showSocialSubmenu is true
                     <>
                       <DropdownMenuItem 
                         asChild 
