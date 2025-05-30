@@ -45,6 +45,18 @@ const Header = () => {
     }
   };
 
+  const handleSocialClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowSocialSubmenu(true);
+  };
+
+  const handleBackClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowSocialSubmenu(false);
+  };
+
   return (
     <>
       <header className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-4 shadow-lg relative">
@@ -82,11 +94,11 @@ const Header = () => {
                           return (
                             <DropdownMenuItem 
                               key={item.path} 
-                              asChild 
                               className="p-0 mb-1 last:mb-0"
+                              onSelect={(e) => e.preventDefault()}
                             >
                               <div 
-                                onClick={() => setShowSocialSubmenu(true)}
+                                onClick={handleSocialClick}
                                 className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center justify-between text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer"
                               >
                                 <span>{item.label}</span>
@@ -124,11 +136,11 @@ const Header = () => {
                     // Social Submenu - Show when showSocialSubmenu is true
                     <>
                       <DropdownMenuItem 
-                        asChild 
                         className="p-0 mb-2"
+                        onSelect={(e) => e.preventDefault()}
                       >
                         <div 
-                          onClick={() => setShowSocialSubmenu(false)}
+                          onClick={handleBackClick}
                           className="w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-in-out border border-transparent flex items-center gap-3 text-white hover:bg-gradient-to-r hover:from-blue-700 hover:to-indigo-700 hover:shadow-md hover:scale-[1.01] hover:border-blue-400 cursor-pointer"
                         >
                           <ChevronLeft className="h-4 w-4" />
