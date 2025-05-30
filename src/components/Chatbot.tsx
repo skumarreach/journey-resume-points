@@ -2,6 +2,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -12,17 +15,13 @@ interface Message {
 
 const Chatbot = () => {
   const [isMinimized, setIsMinimized] = useState(true);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hello! I'm here to help answer your questions about Gurukulam and our programs for children with special needs. How can I assist you today?",
-      isBot: true,
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,6 +30,65 @@ const Chatbot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (user && messages.length === 0) {
+      // Load previous chat history for logged-in user
+      loadChatHistory();
+      // Add welcome message
+      const welcomeMessage: Message = {
+        id: '1',
+        text: `Hello ${user.email}! I'm here to help answer your questions about Gurukulam and our programs for children with special needs. How can I assist you today?`,
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [user]);
+
+  const loadChatHistory = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('chat_history')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const historyMessages = data?.map(record => ({
+        id: record.id,
+        text: record.message,
+        isBot: record.is_bot,
+        timestamp: new Date(record.created_at)
+      })) || [];
+
+      setMessages(historyMessages);
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
+  };
+
+  const saveChatMessage = async (message: Message) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('chat_history')
+        .insert({
+          user_id: user.id,
+          message: message.text,
+          is_bot: message.isBot,
+          user_email: user.email
+        });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving chat message:', error);
+    }
+  };
 
   const generateBotResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
@@ -69,6 +127,11 @@ const Chatbot = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    if (!user) {
+      setShowLoginPrompt(true);
+      return;
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputMessage,
@@ -77,11 +140,12 @@ const Chatbot = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    await saveChatMessage(userMessage);
     setInputMessage('');
     setIsTyping(true);
 
     // Simulate bot thinking time
-    setTimeout(() => {
+    setTimeout(async () => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: generateBotResponse(inputMessage),
@@ -90,6 +154,7 @@ const Chatbot = () => {
       };
       
       setMessages(prev => [...prev, botResponse]);
+      await saveChatMessage(botResponse);
       setIsTyping(false);
     }, 1000 + Math.random() * 1000);
   };
@@ -101,11 +166,52 @@ const Chatbot = () => {
     }
   };
 
+  const handleChatButtonClick = () => {
+    if (!user) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    setIsMinimized(false);
+  };
+
+  if (showLoginPrompt) {
+    return (
+      <div className="fixed bottom-4 right-4 z-50">
+        <div className="bg-white rounded-lg shadow-2xl border p-4 w-64">
+          <p className="text-sm text-gray-600 mb-3">Please log in to start chatting with us.</p>
+          <div className="flex space-x-2">
+            <Button
+              onClick={() => setShowLoginPrompt(false)}
+              variant="outline"
+              size="sm"
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLoginPrompt(false);
+                toast({
+                  title: "Please log in",
+                  description: "Use the login button in the header to access the chat feature."
+                });
+              }}
+              size="sm"
+              className="flex-1"
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isMinimized) {
     return (
       <div className="fixed bottom-4 right-4 z-50">
         <Button
-          onClick={() => setIsMinimized(false)}
+          onClick={handleChatButtonClick}
           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-full shadow-lg flex items-center space-x-2"
         >
           <Bot className="w-4 h-4" />
