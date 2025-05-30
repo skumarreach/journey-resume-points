@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import type { Database } from '@/integrations/supabase/types';
+
+type SocialPlatform = Database['public']['Enums']['social_platform'];
 
 interface AdminProfile {
   id: string;
@@ -26,7 +29,7 @@ export const AddSocialAccountDialog = ({
   onAccountAdded, 
   adminProfile 
 }: AddSocialAccountDialogProps) => {
-  const [platform, setPlatform] = useState('');
+  const [platform, setPlatform] = useState<SocialPlatform | ''>('');
   const [accountName, setAccountName] = useState('');
   const [accountId, setAccountId] = useState('');
   const [accessToken, setAccessToken] = useState('');
@@ -34,16 +37,18 @@ export const AddSocialAccountDialog = ({
   const { toast } = useToast();
 
   const platforms = [
-    { value: 'facebook', label: 'Facebook' },
-    { value: 'instagram', label: 'Instagram' },
-    { value: 'twitter', label: 'Twitter' },
-    { value: 'linkedin', label: 'LinkedIn' },
-    { value: 'youtube', label: 'YouTube' },
-    { value: 'tiktok', label: 'TikTok' }
+    { value: 'facebook' as const, label: 'Facebook' },
+    { value: 'instagram' as const, label: 'Instagram' },
+    { value: 'twitter' as const, label: 'Twitter' },
+    { value: 'linkedin' as const, label: 'LinkedIn' },
+    { value: 'youtube' as const, label: 'YouTube' },
+    { value: 'tiktok' as const, label: 'TikTok' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!platform) return;
+    
     setLoading(true);
 
     try {
@@ -52,7 +57,7 @@ export const AddSocialAccountDialog = ({
       const { error } = await supabase
         .from('social_accounts')
         .insert({
-          platform,
+          platform: platform as SocialPlatform,
           account_name: accountName,
           account_id: accountId,
           access_token_encrypted: accessToken, // TODO: Implement encryption
@@ -99,7 +104,7 @@ export const AddSocialAccountDialog = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="platform">Platform</Label>
-            <Select value={platform} onValueChange={setPlatform} required>
+            <Select value={platform} onValueChange={(value) => setPlatform(value as SocialPlatform)} required>
               <SelectTrigger>
                 <SelectValue placeholder="Select a platform" />
               </SelectTrigger>

@@ -8,12 +8,15 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, UserCheck, UserX } from 'lucide-react';
 import { AddAdminDialog } from './AddAdminDialog';
+import type { Database } from '@/integrations/supabase/types';
+
+type AdminRole = Database['public']['Enums']['admin_role'];
 
 interface Admin {
   id: string;
   user_id: string;
   email: string;
-  role: 'super_admin' | 'content_admin' | 'analytics_admin' | 'social_admin';
+  role: AdminRole;
   is_active: boolean;
   created_at: string;
 }
@@ -58,13 +61,13 @@ export const AdminManagement = ({ adminProfile }: { adminProfile: AdminProfile }
     try {
       const { error } = await supabase
         .from('admins')
-        .update({ role: newRole })
+        .update({ role: newRole as AdminRole })
         .eq('id', adminId);
 
       if (error) throw error;
 
       setAdmins(prev => prev.map(admin => 
-        admin.id === adminId ? { ...admin, role: newRole as any } : admin
+        admin.id === adminId ? { ...admin, role: newRole as AdminRole } : admin
       ));
 
       toast({
